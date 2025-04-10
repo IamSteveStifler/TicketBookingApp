@@ -3,10 +3,17 @@
  */
 package TicketBookingApp;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 public class App {
 
     public static void main(String[] args) {
 
         System.out.println("App is running!!");
+        var l = Arrays.asList(1, 2, 3, 4, 5);
+        var res = l.stream().filter(e -> (e&1)==0).toList();
+        System.out.println(res);
     }
 }
