@@ -1,5 +1,6 @@
 package TicketBookingApp.services;
 
+import TicketBookingApp.entities.Train;
 import TicketBookingApp.entities.User;
 import TicketBookingApp.utils.UserServiceUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class UserBookingService {
     private User user;
     private List<User> userList;
+    private TicketBookingService ticketBookingService;
     private static final String USERS_PATH =
             "/Documents/TicketBookingApp/app/src/main/java/TicketBookingApp/localDB/users.json";
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -24,6 +26,7 @@ public class UserBookingService {
 
     public UserBookingService(User user) throws IOException {
         this.user = user;
+        ticketBookingService = new TicketBookingService(user);
         loadUserFromFile();
     }
 
@@ -82,6 +85,10 @@ public class UserBookingService {
                 });
         saveUserToFile();
         return Boolean.TRUE;
+    }
+
+    public List<Train> searchTrain(String origin, String destination) {
+        return ticketBookingService.searchTrain(origin, destination);
     }
 
 }

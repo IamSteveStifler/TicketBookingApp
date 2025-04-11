@@ -15,6 +15,14 @@ public class App {
         System.out.println(exception);
     }
 
+    public static Boolean isUserLoggedIn(UserBookingService userBookingService) {
+        if(!userBookingService.checkUserLoggedIn()) {
+            printException("You cant perform this operation");
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
     public static void main(String[] args) {
         System.out.println("App is running!!");
         try(Scanner sc = new Scanner(System.in)){
@@ -65,11 +73,26 @@ public class App {
                         }
                     }
                     case 3 -> {
-                        if(!userBookingService.checkUserLoggedIn()) {
-                            printException("You cant perform this operation");
+                        if(!isUserLoggedIn(userBookingService)) {
                             break;
                         }
                         userBookingService.fetchBooking();
+                    }
+                    case 4 -> {
+                        if(!isUserLoggedIn(userBookingService)) {
+                            break;
+                        }
+                        System.out.println("Enter source & destination:");
+                        String origin = sc.next();
+                        String destination = sc.next();
+                        var listOfTrains = userBookingService.searchTrain(origin, destination);
+                        if(listOfTrains.isEmpty()) {
+                            printException("No trains between "+origin+" and "+destination);
+                        } else {
+                            listOfTrains.forEach(
+                                    t -> System.out.println(t.getTrainNo())
+                            );
+                        }
                     }
 
                 }
