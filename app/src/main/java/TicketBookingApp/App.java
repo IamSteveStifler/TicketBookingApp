@@ -3,17 +3,80 @@
  */
 package TicketBookingApp;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
+import TicketBookingApp.entities.User;
+import TicketBookingApp.services.UserBookingService;
+import TicketBookingApp.utils.UserServiceUtil;
+import java.io.IOException;
+import java.util.*;
 
 public class App {
 
-    public static void main(String[] args) {
+    public static void printException(String exception) {
+        System.out.println(exception);
+    }
 
+    public static void main(String[] args) {
         System.out.println("App is running!!");
-        var l = Arrays.asList(1, 2, 3, 4, 5);
-        var res = l.stream().filter(e -> (e&1)==0).toList();
-        System.out.println(res);
+        try(Scanner sc = new Scanner(System.in)){
+            int option = 0;
+            UserBookingService userBookingService;
+            try {
+                userBookingService = new UserBookingService();
+            } catch (IOException ex) {
+                printException("Some error occurred!");
+                return;
+            }
+            while (option != 7) {
+                System.out.println("Choose option below:");
+                System.out.println("1. Sign up");
+                System.out.println("2. Login");
+                System.out.println("3. Fetch Bookings");
+                System.out.println("4. Search Trains");
+                System.out.println("5. Book a Seat");
+                System.out.println("6. Cancel my Booking");
+                System.out.println("7. Exit the App");
+                option = sc.nextInt();
+                switch (option) {
+                    case 1 -> {
+                        System.out.print("Enter username & password:");
+                        String username = sc.next();
+                        String password = sc.next();
+                        User newUser = new User(UUID.randomUUID().toString(),
+                                username, "",
+                                UserServiceUtil.hashPassword(password),
+                                new ArrayList<>());
+                        if(userBookingService.signupUser(newUser)) {
+                            System.out.println("User created successfully!");
+                        } else {
+                            printException("Some error occurred!");
+                            return;
+                        }
+                    }
+                    case 2 -> {
+                        System.out.print("Enter username & password:");
+                        String username = sc.next();
+                        String password = sc.next();
+                        var fetchedUserFromDB = userBookingService.loginUser(username, password);
+                        if(fetchedUserFromDB.isPresent()) {
+                            userBookingService = new UserBookingService(fetchedUserFromDB.get());
+                            System.out.println("User logged in!");
+                        } else {
+                            printException("User doesn't exist!");
+                        }
+                    }
+                    case 3 -> {
+                        if(!userBookingService.checkUserLoggedIn()) {
+                            printException("You cant perform this operation");
+                            break;
+                        }
+                        userBookingService.fetchBooking();
+                    }
+
+                }
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

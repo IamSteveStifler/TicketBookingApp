@@ -10,6 +10,15 @@ public class Train {
     private List<List<Integer>> seats;
     private Map<String, String> stationTimes;
     private List<String> stations;
+    private String trainInfo;
+
+    public String getTrainInfo() {
+        return trainInfo;
+    }
+
+    public void setTrainInfo(String trainInfo) {
+        this.trainInfo = trainInfo;
+    }
 
     public String getTrainId() {
         return trainId;

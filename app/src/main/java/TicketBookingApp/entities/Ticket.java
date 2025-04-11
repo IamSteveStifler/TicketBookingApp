@@ -9,6 +9,15 @@ public class Ticket {
     private String destination;
     private Date dateOfTravel;
     private Train train;
+    private String ticketInfo;
+
+    public String getTicketInfo() {
+        return ticketInfo;
+    }
+
+    public void setTicketInfo(String ticketInfo) {
+        this.ticketInfo = ticketInfo;
+    }
 
     public String getTicketId() {
         return ticketId;
